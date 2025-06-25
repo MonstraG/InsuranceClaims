@@ -15,6 +15,12 @@ public class ClaimsController(Repository<Claim> claimsRepository) : ControllerBa
 		return claimsRepository.GetAll();
 	}
 
+	[HttpGet("{id}")]
+	public Task<Claim?> GetAsync(string id)
+	{
+		return claimsRepository.GetById(id);
+	}
+
 	[HttpPost]
 	public async Task<Claim> CreateAsync(NewClaimDTO newClaim)
 	{
@@ -27,11 +33,5 @@ public class ClaimsController(Repository<Claim> claimsRepository) : ControllerBa
 	public async Task DeleteAsync(string id)
 	{
 		await claimsRepository.DeleteAsync(id);
-	}
-
-	[HttpGet("{id}")]
-	public Task<Claim?> GetAsync(string id)
-	{
-		return claimsRepository.GetById(id);
 	}
 }

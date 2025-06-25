@@ -10,12 +10,6 @@ namespace Claims.Controllers;
 [Route("[controller]")]
 public class CoversController(Repository<Cover> coversRepository) : ControllerBase
 {
-	[HttpPost("compute")]
-	public decimal ComputePremiumAsync(NewCoverDTO newCover)
-	{
-		return PremiumComputer.ComputePremium(newCover);
-	}
-
 	[HttpGet]
 	public IQueryable<Cover> GetAsync()
 	{
@@ -40,5 +34,11 @@ public class CoversController(Repository<Cover> coversRepository) : ControllerBa
 	public async Task DeleteAsync(string id)
 	{
 		await coversRepository.DeleteAsync(id);
+	}
+
+	[HttpPost("compute")]
+	public decimal ComputePremiumAsync(NewCoverDTO newCover)
+	{
+		return PremiumComputer.ComputePremium(newCover);
 	}
 }
