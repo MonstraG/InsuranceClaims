@@ -2,7 +2,6 @@ using Claims.Auditing;
 using Claims.Claims;
 using Claims.Claims.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Claims.Controllers;
 
@@ -10,32 +9,26 @@ namespace Claims.Controllers;
 [Route("[controller]")]
 public class CoversController(
 	ILogger<CoversController> logger,
-	ClaimsContext claimsContext,
+	Repository<Cover> coversRepository,
 	Auditer auditer
 ) : ControllerBase
 {
 	[HttpPost("compute")]
-	public ActionResult ComputePremiumAsync(
-		DateTime startDate,
-		DateTime endDate,
-		CoverType coverType
-	)
+	public decimal ComputePremiumAsync(DateTime startDate, DateTime endDate, CoverType coverType)
 	{
-		return Ok(ComputePremium(startDate, endDate, coverType));
+		return ComputePremium(startDate, endDate, coverType);
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<Cover>>> GetAsync()
+	public IQueryable<Cover> GetAsync()
 	{
-		var results = await claimsContext.Covers.ToListAsync();
-		return Ok(results);
+		return coversRepository.GetAll();
 	}
 
 	[HttpGet("{id}")]
-	public async Task<ActionResult<Cover>> GetAsync(string id)
+	public Task<Cover?> GetAsync(string id)
 	{
-		var results = await claimsContext.Covers.ToListAsync();
-		return Ok(results.SingleOrDefault(cover => cover.Id == id));
+		return coversRepository.GetById(id);
 	}
 
 	[HttpPost]
@@ -43,8 +36,7 @@ public class CoversController(
 	{
 		cover.Id = Guid.NewGuid().ToString();
 		cover.Premium = ComputePremium(cover.StartDate, cover.EndDate, cover.Type);
-		claimsContext.Covers.Add(cover);
-		await claimsContext.SaveChangesAsync();
+		await coversRepository.CreateAsync(cover);
 		auditer.AuditCover(cover.Id, "POST");
 		return Ok(cover);
 	}
@@ -53,14 +45,7 @@ public class CoversController(
 	public async Task DeleteAsync(string id)
 	{
 		auditer.AuditCover(id, "DELETE");
-		var cover = await claimsContext
-			.Covers.Where(cover => cover.Id == id)
-			.SingleOrDefaultAsync();
-		if (cover is not null)
-		{
-			claimsContext.Covers.Remove(cover);
-			await claimsContext.SaveChangesAsync();
-		}
+		await coversRepository.DeleteAsync(id);
 	}
 
 	private static decimal ComputePremium(DateTime startDate, DateTime endDate, CoverType coverType)
