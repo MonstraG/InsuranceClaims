@@ -1,5 +1,6 @@
 using Claims.Auditing;
 using Claims.Claims;
+using Claims.Claims.DTOs;
 using Claims.Claims.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,9 +21,9 @@ public class ClaimsController(
 	}
 
 	[HttpPost]
-	public async Task<Claim> CreateAsync(Claim claim)
+	public async Task<Claim> CreateAsync(NewClaimDTO newClaim)
 	{
-		claim.Id = Guid.NewGuid().ToString();
+		var claim = new Claim(newClaim);
 		await claimsRepository.CreateAsync(claim);
 		auditer.AuditClaim(claim.Id, "POST");
 		return claim;

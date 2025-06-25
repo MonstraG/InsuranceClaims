@@ -1,14 +1,27 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using Claims.Claims.DTOs;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Claims.Claims.Models;
 
 public class Claim : IIdentifiable
 {
+	private Claim() { }
+
+	public Claim(NewClaimDTO newClaim)
+	{
+		Id = Guid.NewGuid().ToString();
+		CoverId = newClaim.CoverId;
+		Created = DateTime.UtcNow;
+		Name = newClaim.Name;
+		Type = newClaim.Type;
+		DamageCost = newClaim.DamageCost;
+	}
+
 	[BsonId]
-	public string Id { get; set; }
+	public string Id { get; set; } = null!;
 
 	[BsonElement("coverId")]
-	public string CoverId { get; set; }
+	public string CoverId { get; set; } = null!;
 
 	[BsonElement("created")]
 	// todo: re-add, breaks serialization
@@ -16,7 +29,7 @@ public class Claim : IIdentifiable
 	public DateTime Created { get; set; }
 
 	[BsonElement("name")]
-	public string Name { get; set; }
+	public string Name { get; set; } = null!;
 
 	[BsonElement("claimType")]
 	public ClaimType Type { get; set; }
