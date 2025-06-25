@@ -8,11 +8,13 @@ public class Cover
 	public string Id { get; set; }
 
 	[BsonElement("startDate")]
-	[BsonDateTimeOptions(DateOnly = true)]
+	// todo: re-add, breaks serialization
+	// [BsonDateTimeOptions(DateOnly = true)]
 	public DateTime StartDate { get; set; }
 
 	[BsonElement("endDate")]
-	[BsonDateTimeOptions(DateOnly = true)]
+	// todo: re-add, breaks serialization
+	// [BsonDateTimeOptions(DateOnly = true)]
 	public DateTime EndDate { get; set; }
 
 	[BsonElement("claimType")]
