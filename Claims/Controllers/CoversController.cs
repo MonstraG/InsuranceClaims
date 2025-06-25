@@ -10,6 +10,8 @@ namespace Claims.Controllers;
 [Route("[controller]")]
 public class CoversController(Repository<Cover> coversRepository) : ControllerBase
 {
+	private const int YearDays = 365;
+
 	[HttpGet]
 	public IQueryable<Cover> GetAsync()
 	{
@@ -23,8 +25,26 @@ public class CoversController(Repository<Cover> coversRepository) : ControllerBa
 	}
 
 	[HttpPost]
-	public async Task<Cover> CreateAsync(NewCoverDTO newCover)
+	public async Task<ActionResult<Cover>> CreateAsync(NewCoverDTO newCover)
 	{
+		if (newCover.StartDate < DateTime.UtcNow)
+		{
+			return BadRequest("cover start date cannot be in the past");
+		}
+
+		if (newCover.EndDate <= newCover.StartDate)
+		{
+			return BadRequest("cover end date cannot be earlier or equal to start date");
+		}
+
+		var duration = ICover.GetInsuranceLength(newCover);
+		if (duration > YearDays)
+		{
+			return BadRequest(
+				$"total insurance period cannot exceed 1 year, actual length = {duration:F} days"
+			);
+		}
+
 		var cover = new Cover(newCover);
 		await coversRepository.CreateAsync(cover);
 		return cover;
