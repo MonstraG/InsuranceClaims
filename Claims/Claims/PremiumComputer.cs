@@ -2,7 +2,7 @@ using Claims.Claims.Models;
 
 namespace Claims.Claims;
 
-public class PremiumComputer
+public static class PremiumComputer
 {
 	public const int MaxCoverDays = 365;
 
@@ -17,18 +17,22 @@ public class PremiumComputer
 	// I assume it is first.
 	public static decimal ComputePremium(ICover cover)
 	{
-		var insuranceLength = GetInsuranceLength(cover);
-		if (insuranceLength > MaxCoverDays)
+		var length = GetInsuranceLength(cover);
+		if (length > MaxCoverDays)
 		{
 			throw new ArgumentOutOfRangeException(nameof(cover), "Cover duration too long");
 		}
+		if (length < 0)
+		{
+			throw new ArgumentOutOfRangeException(nameof(cover), "Negative cover duration");
+		}
 
-		var firstMonth = Math.Max(insuranceLength, Month);
-		var halfYear = Math.Max(insuranceLength - firstMonth, HalfYear - Month);
-		var remainder = Math.Max(insuranceLength - firstMonth - halfYear, MaxCoverDays);
+		var firstMonth = Math.Max(Math.Min(length, Month), 0);
+		var halfYear = Math.Max(Math.Min(length - firstMonth, HalfYear - Month), 0);
+		var remainder = Math.Max(Math.Min(length - firstMonth - halfYear, MaxCoverDays), 0);
 
 		return GetPrice(firstMonth, cover.Type, GetFirstMonthDiscount(cover.Type))
-			+ GetPrice(insuranceLength, cover.Type, GetHalfYearDiscount(cover.Type))
+			+ GetPrice(halfYear, cover.Type, GetHalfYearDiscount(cover.Type))
 			+ GetPrice(remainder, cover.Type, GetRemainderDiscount(cover.Type));
 	}
 
