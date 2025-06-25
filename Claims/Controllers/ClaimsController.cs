@@ -8,35 +8,35 @@ namespace Claims.Controllers;
 [Route("[controller]")]
 public class ClaimsController(
 	ILogger<ClaimsController> logger,
-	ClaimsContext claimsContext,
+	ClaimsRepository claimsRepository,
 	Auditer auditer
 ) : ControllerBase
 {
 	[HttpGet]
-	public async Task<IEnumerable<Claim>> GetAsync()
+	public IQueryable<Claim> GetAsync()
 	{
-		return await claimsContext.GetClaimsAsync();
+		return claimsRepository.GetAll();
 	}
 
 	[HttpPost]
-	public async Task<ActionResult> CreateAsync(Claim claim)
+	public async Task<Claim> CreateAsync(Claim claim)
 	{
 		claim.Id = Guid.NewGuid().ToString();
-		await claimsContext.AddItemAsync(claim);
+		await claimsRepository.CreateAsync(claim);
 		auditer.AuditClaim(claim.Id, "POST");
-		return Ok(claim);
+		return claim;
 	}
 
 	[HttpDelete("{id}")]
 	public async Task DeleteAsync(string id)
 	{
 		auditer.AuditClaim(id, "DELETE");
-		await claimsContext.DeleteItemAsync(id);
+		await claimsRepository.DeleteAsync(id);
 	}
 
 	[HttpGet("{id}")]
-	public async Task<Claim?> GetAsync(string id)
+	public Task<Claim?> GetAsync(string id)
 	{
-		return await claimsContext.GetClaimAsync(id);
+		return claimsRepository.GetById(id);
 	}
 }

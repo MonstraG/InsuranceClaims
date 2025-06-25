@@ -46,6 +46,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<Auditer>();
+builder.Services.AddScoped<ClaimsRepository>();
 
 var app = builder.Build();
 
