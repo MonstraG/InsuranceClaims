@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Claims.Tests;
+namespace Claims.Tests.Setup;
 
 public static class TestHelpers
 {

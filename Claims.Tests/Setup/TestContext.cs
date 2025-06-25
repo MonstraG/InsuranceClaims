@@ -2,7 +2,7 @@ using Claims.Claims;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Claims.Tests;
+namespace Claims.Tests.Setup;
 
 public class TestAppContext : IDisposable
 {

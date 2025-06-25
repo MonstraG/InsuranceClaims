@@ -16,6 +16,6 @@ public record NewClaimDTO
 	// In the real world I would verify things like that
 	public required DateTime Created { get; init; }
 
-	[Range(1, 100_000)]
+	[Range(1, Claim.MaxCost)]
 	public required decimal DamageCost { get; init; }
 }

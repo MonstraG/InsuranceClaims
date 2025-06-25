@@ -6,6 +6,8 @@ namespace Claims.Claims.Models;
 
 public class Claim : IIdentifiable
 {
+	public const double MaxCost = 100_000d;
+
 	[JsonConstructor]
 	private Claim() { }
 
