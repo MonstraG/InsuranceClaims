@@ -40,7 +40,7 @@ try
 			x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 		});
 
-	builder.Services.AddDbContext<AuditContext>(options =>
+	builder.Services.AddDbContextFactory<AuditContext>(options =>
 		options.UseSqlServer(sqlContainer.GetConnectionString())
 	);
 
@@ -55,7 +55,7 @@ try
 	builder.Services.AddEndpointsApiExplorer();
 	builder.Services.AddSwaggerGen();
 
-	builder.Services.AddScoped<Auditer>();
+	builder.Services.AddSingleton<Auditer>();
 	builder.Services.AddScoped<Repository<Claim>, ClaimsRepository>();
 	builder.Services.AddScoped<Repository<Cover>, CoversRepository>();
 

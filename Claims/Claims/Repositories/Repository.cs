@@ -23,7 +23,7 @@ public abstract class Repository<T>(ClaimsContext claimsContext)
 		Set.Add(item);
 		await claimsContext.SaveChangesAsync();
 
-		await OnCreateAsync(item);
+		OnCreateAsync(item);
 	}
 
 	public async Task DeleteAsync(string id)
@@ -35,10 +35,10 @@ public abstract class Repository<T>(ClaimsContext claimsContext)
 			await claimsContext.SaveChangesAsync();
 		}
 
-		await OnDeleteAsync(id);
+		OnDeleteAsync(id);
 	}
 
-	protected virtual Task OnCreateAsync(T item) => Task.CompletedTask;
+	protected virtual void OnCreateAsync(T item) { }
 
-	protected virtual Task OnDeleteAsync(string id) => Task.CompletedTask;
+	protected virtual void OnDeleteAsync(string id) { }
 }

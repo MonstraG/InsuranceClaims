@@ -1,38 +1,49 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace Claims.Auditing;
 
-public class Auditer(AuditContext auditContext)
+public class Auditer(IDbContextFactory<AuditContext> auditContextFactory)
 {
-	public Task AuditClaim(
+	public void AuditClaim(
 		string id,
 		[AllowedValues("POST", "PUT", "DELETE")] string httpRequestType
 	)
 	{
-		var claimAudit = new ClaimAudit
+		Task.Run(async () =>
 		{
-			Created = DateTime.Now,
-			HttpRequestType = httpRequestType,
-			ClaimId = id,
-		};
+			await using var auditContext = await auditContextFactory.CreateDbContextAsync();
 
-		auditContext.Add(claimAudit);
-		return auditContext.SaveChangesAsync();
+			var claimAudit = new ClaimAudit
+			{
+				Created = DateTime.Now,
+				HttpRequestType = httpRequestType,
+				ClaimId = id,
+			};
+
+			auditContext.Add(claimAudit);
+			await auditContext.SaveChangesAsync();
+		});
 	}
 
-	public Task AuditCover(
+	public void AuditCover(
 		string id,
 		[AllowedValues("POST", "PUT", "DELETE")] string httpRequestType
 	)
 	{
-		var coverAudit = new CoverAudit
+		Task.Run(async () =>
 		{
-			Created = DateTime.Now,
-			HttpRequestType = httpRequestType,
-			CoverId = id,
-		};
+			await using var auditContext = await auditContextFactory.CreateDbContextAsync();
 
-		auditContext.Add(coverAudit);
-		return auditContext.SaveChangesAsync();
+			var coverAudit = new CoverAudit
+			{
+				Created = DateTime.Now,
+				HttpRequestType = httpRequestType,
+				CoverId = id,
+			};
+
+			auditContext.Add(coverAudit);
+			await auditContext.SaveChangesAsync();
+		});
 	}
 }
