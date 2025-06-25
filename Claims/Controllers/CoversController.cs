@@ -1,18 +1,14 @@
-using Claims.Auditing;
 using Claims.Claims;
 using Claims.Claims.DTOs;
 using Claims.Claims.Models;
+using Claims.Claims.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Claims.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class CoversController(
-	ILogger<CoversController> logger,
-	Repository<Cover> coversRepository,
-	Auditer auditer
-) : ControllerBase
+public class CoversController(Repository<Cover> coversRepository) : ControllerBase
 {
 	[HttpPost("compute")]
 	public decimal ComputePremiumAsync(NewCoverDTO newCover)
@@ -33,18 +29,16 @@ public class CoversController(
 	}
 
 	[HttpPost]
-	public async Task<ActionResult> CreateAsync(NewCoverDTO newCover)
+	public async Task<Cover> CreateAsync(NewCoverDTO newCover)
 	{
 		var cover = new Cover(newCover);
 		await coversRepository.CreateAsync(cover);
-		auditer.AuditCover(cover.Id, "POST");
-		return Ok(cover);
+		return cover;
 	}
 
 	[HttpDelete("{id}")]
 	public async Task DeleteAsync(string id)
 	{
-		auditer.AuditCover(id, "DELETE");
 		await coversRepository.DeleteAsync(id);
 	}
 }

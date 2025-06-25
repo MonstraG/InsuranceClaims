@@ -1,8 +1,13 @@
-﻿namespace Claims.Auditing;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Claims.Auditing;
 
 public class Auditer(AuditContext auditContext)
 {
-	public void AuditClaim(string id, string httpRequestType)
+	public Task AuditClaim(
+		string id,
+		[AllowedValues("POST", "PUT", "DELETE")] string httpRequestType
+	)
 	{
 		var claimAudit = new ClaimAudit
 		{
@@ -12,10 +17,13 @@ public class Auditer(AuditContext auditContext)
 		};
 
 		auditContext.Add(claimAudit);
-		auditContext.SaveChanges();
+		return auditContext.SaveChangesAsync();
 	}
 
-	public void AuditCover(string id, string httpRequestType)
+	public Task AuditCover(
+		string id,
+		[AllowedValues("POST", "PUT", "DELETE")] string httpRequestType
+	)
 	{
 		var coverAudit = new CoverAudit
 		{
@@ -25,6 +33,6 @@ public class Auditer(AuditContext auditContext)
 		};
 
 		auditContext.Add(coverAudit);
-		auditContext.SaveChanges();
+		return auditContext.SaveChangesAsync();
 	}
 }

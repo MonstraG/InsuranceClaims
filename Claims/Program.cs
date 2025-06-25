@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Claims.Auditing;
 using Claims.Claims;
 using Claims.Claims.Models;
+using Claims.Claims.Repositories;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using Serilog;
@@ -55,8 +56,8 @@ try
 	builder.Services.AddSwaggerGen();
 
 	builder.Services.AddScoped<Auditer>();
-	builder.Services.AddScoped<Repository<Claim>>();
-	builder.Services.AddScoped<Repository<Cover>>();
+	builder.Services.AddScoped<Repository<Claim>, ClaimsRepository>();
+	builder.Services.AddScoped<Repository<Cover>, CoversRepository>();
 
 	var app = builder.Build();
 

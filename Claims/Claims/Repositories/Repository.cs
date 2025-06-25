@@ -1,9 +1,9 @@
 using Claims.Claims.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Claims.Claims;
+namespace Claims.Claims.Repositories;
 
-public class Repository<T>(ClaimsContext claimsContext)
+public abstract class Repository<T>(ClaimsContext claimsContext)
 	where T : class, IIdentifiable
 {
 	private DbSet<T> Set => claimsContext.Set<T>();
@@ -22,6 +22,8 @@ public class Repository<T>(ClaimsContext claimsContext)
 	{
 		Set.Add(item);
 		await claimsContext.SaveChangesAsync();
+
+		await OnCreateAsync(item);
 	}
 
 	public async Task DeleteAsync(string id)
@@ -32,5 +34,11 @@ public class Repository<T>(ClaimsContext claimsContext)
 			Set.Remove(claim);
 			await claimsContext.SaveChangesAsync();
 		}
+
+		await OnDeleteAsync(id);
 	}
+
+	protected virtual Task OnCreateAsync(T item) => Task.CompletedTask;
+
+	protected virtual Task OnDeleteAsync(string id) => Task.CompletedTask;
 }
