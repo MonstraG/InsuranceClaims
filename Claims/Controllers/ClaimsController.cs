@@ -1,5 +1,6 @@
 using Claims.Auditing;
 using Claims.Claims;
+using Claims.Claims.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Claims.Controllers;
@@ -8,7 +9,7 @@ namespace Claims.Controllers;
 [Route("[controller]")]
 public class ClaimsController(
 	ILogger<ClaimsController> logger,
-	ClaimsRepository claimsRepository,
+	Repository<Claim> claimsRepository,
 	Auditer auditer
 ) : ControllerBase
 {

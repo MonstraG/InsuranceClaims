@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using Claims.Auditing;
 using Claims.Claims;
-using Claims.Controllers;
+using Claims.Claims.Models;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using Testcontainers.MongoDb;
@@ -46,7 +46,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<Auditer>();
-builder.Services.AddScoped<ClaimsRepository>();
+builder.Services.AddScoped<Repository<Claim>>();
+builder.Services.AddScoped<Repository<Cover>>();
 
 var app = builder.Build();
 

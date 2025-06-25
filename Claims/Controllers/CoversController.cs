@@ -1,5 +1,6 @@
 using Claims.Auditing;
 using Claims.Claims;
+using Claims.Claims.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

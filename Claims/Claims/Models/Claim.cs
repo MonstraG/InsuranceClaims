@@ -1,8 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace Claims.Claims;
+namespace Claims.Claims.Models;
 
-public class Claim
+public class Claim : IIdentifiable
 {
 	[BsonId]
 	public string Id { get; set; }
