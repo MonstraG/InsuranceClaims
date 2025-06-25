@@ -1,10 +1,12 @@
-﻿using Claims.Claims.DTOs;
+﻿using System.Text.Json.Serialization;
+using Claims.Claims.DTOs;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Claims.Claims.Models;
 
 public class Claim : IIdentifiable
 {
+	[JsonConstructor]
 	private Claim() { }
 
 	public Claim(NewClaimDTO newClaim)

@@ -17,12 +17,10 @@ builder
 	});
 
 builder.Services.AddDbContextFactory<AuditContext>(options =>
-	options.UseInMemoryDatabase(Guid.NewGuid().ToString())
+	options.UseInMemoryDatabase("TestDb")
 );
 
-builder.Services.AddDbContext<ClaimsContext>(options =>
-	options.UseInMemoryDatabase(Guid.NewGuid().ToString())
-);
+builder.Services.AddDbContext<ClaimsContext>(options => options.UseInMemoryDatabase("TestDb2"));
 
 // this is needed for this TestApp to pick up real controllers
 var startupAssembly = typeof(Claim).Assembly;

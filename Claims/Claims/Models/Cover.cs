@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Claims.Claims.DTOs;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -5,6 +6,7 @@ namespace Claims.Claims.Models;
 
 public class Cover : IIdentifiable, ICover
 {
+	[JsonConstructor]
 	private Cover() { }
 
 	public Cover(NewCoverDTO newCover)
