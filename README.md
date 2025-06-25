@@ -55,3 +55,8 @@ Desired logic:
   * First 30 days are computed based on the logic above
   * Following 150 days are discounted by 5% for Yacht and by 2% for other types
   * The remaining days are discounted by additional 3% for Yacht and by 1% for other types
+
+
+# Notes
+
+- I'll just assume that the 2 contexts must use different db's and that's that.

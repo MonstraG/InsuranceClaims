@@ -8,14 +8,11 @@ namespace Claims.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class CoversController(
+	ILogger<CoversController> logger,
 	ClaimsContext claimsContext,
-	AuditContext auditContext,
-	ILogger<CoversController> logger
+	Auditer auditer
 ) : ControllerBase
 {
-	private readonly ILogger<CoversController> _logger = logger;
-	private readonly Auditer _auditer = new(auditContext);
-
 	[HttpPost("compute")]
 	public ActionResult ComputePremiumAsync(
 		DateTime startDate,
@@ -47,14 +44,14 @@ public class CoversController(
 		cover.Premium = ComputePremium(cover.StartDate, cover.EndDate, cover.Type);
 		claimsContext.Covers.Add(cover);
 		await claimsContext.SaveChangesAsync();
-		_auditer.AuditCover(cover.Id, "POST");
+		auditer.AuditCover(cover.Id, "POST");
 		return Ok(cover);
 	}
 
 	[HttpDelete("{id}")]
 	public async Task DeleteAsync(string id)
 	{
-		_auditer.AuditCover(id, "DELETE");
+		auditer.AuditCover(id, "DELETE");
 		var cover = await claimsContext
 			.Covers.Where(cover => cover.Id == id)
 			.SingleOrDefaultAsync();

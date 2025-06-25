@@ -9,11 +9,9 @@ namespace Claims.Controllers;
 public class ClaimsController(
 	ILogger<ClaimsController> logger,
 	ClaimsContext claimsContext,
-	AuditContext auditContext
+	Auditer auditer
 ) : ControllerBase
 {
-	private readonly Auditer _auditer = new(auditContext);
-
 	[HttpGet]
 	public async Task<IEnumerable<Claim>> GetAsync()
 	{
@@ -25,14 +23,14 @@ public class ClaimsController(
 	{
 		claim.Id = Guid.NewGuid().ToString();
 		await claimsContext.AddItemAsync(claim);
-		_auditer.AuditClaim(claim.Id, "POST");
+		auditer.AuditClaim(claim.Id, "POST");
 		return Ok(claim);
 	}
 
 	[HttpDelete("{id}")]
 	public async Task DeleteAsync(string id)
 	{
-		_auditer.AuditClaim(id, "DELETE");
+		auditer.AuditClaim(id, "DELETE");
 		await claimsContext.DeleteItemAsync(id);
 	}
 

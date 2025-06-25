@@ -45,6 +45,8 @@ builder.Services.AddDbContext<ClaimsContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<Auditer>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
