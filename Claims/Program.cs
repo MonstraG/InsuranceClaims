@@ -19,8 +19,10 @@ var sqlContainer = (
 
 var mongoContainer = new MongoDbBuilder().WithImage("mongo:latest").Build();
 
-await sqlContainer.StartAsync();
-await mongoContainer.StartAsync();
+var sqlContainerStartTask = sqlContainer.StartAsync();
+var mongoContainerStartTask = mongoContainer.StartAsync();
+
+await Task.WhenAll(sqlContainerStartTask, mongoContainerStartTask);
 
 // Add services to the container.
 builder
