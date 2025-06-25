@@ -12,10 +12,33 @@ public class ClaimsController(
 	Repository<Cover> coversRepository
 ) : ControllerBase
 {
+	// Note to reviewers:
+	// Here is a documentation example below.
+	// I made these filters up, as illustrative example what could be documented,
+	// but I'm not quite sure what to write in other places,
+	// as just typing "Gets claim by id" above `GetById` sounds really useless.
+
+	/// <param name="coverId">If set, only show claims for this coverId</param>
+	/// <param name="from">If set, only show claims that are created after this date</param>
+	/// <param name="to">If set, only show claims that are created before this date</param>
+	/// <returns>List of claims matching specified filters</returns>
 	[HttpGet]
-	public IQueryable<Claim> GetAsync()
+	public IQueryable<Claim> GetAsync(string? coverId, DateTime? from, DateTime? to)
 	{
-		return claimsRepository.GetAll();
+		var query = claimsRepository.GetAll();
+		if (coverId != null)
+		{
+			query = query.Where(c => c.CoverId == coverId);
+		}
+		if (from != null)
+		{
+			query = query.Where(c => c.Created >= from);
+		}
+		if (to != null)
+		{
+			query = query.Where(c => c.Created <= to);
+		}
+		return query;
 	}
 
 	[HttpGet("{id}")]
