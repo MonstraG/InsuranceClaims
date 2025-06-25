@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using Claims.Auditing;
+using Claims.Claims;
 using Claims.Controllers;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
