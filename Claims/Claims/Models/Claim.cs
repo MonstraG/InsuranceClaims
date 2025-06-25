@@ -11,7 +11,7 @@ public class Claim : IIdentifiable
 	{
 		Id = Guid.NewGuid().ToString();
 		CoverId = newClaim.CoverId;
-		Created = DateTime.UtcNow;
+		Created = newClaim.Created;
 		Name = newClaim.Name;
 		Type = newClaim.Type;
 		DamageCost = newClaim.DamageCost;
