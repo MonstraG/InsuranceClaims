@@ -10,8 +10,6 @@ namespace Claims.Controllers;
 [Route("[controller]")]
 public class CoversController(Repository<Cover> coversRepository) : ControllerBase
 {
-	private const int YearDays = 365;
-
 	[HttpGet]
 	public IQueryable<Cover> GetAsync()
 	{
@@ -37,8 +35,8 @@ public class CoversController(Repository<Cover> coversRepository) : ControllerBa
 			return BadRequest("cover end date cannot be earlier or equal to start date");
 		}
 
-		var duration = ICover.GetInsuranceLength(newCover);
-		if (duration > YearDays)
+		var duration = PremiumComputer.GetInsuranceLength(newCover);
+		if (duration > PremiumComputer.MaxCoverDays)
 		{
 			return BadRequest(
 				$"total insurance period cannot exceed 1 year, actual length = {duration:F} days"
